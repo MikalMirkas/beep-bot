@@ -14,19 +14,19 @@ const config = require('./config')[env];
 //const DOMPurify = require('dompurify');
 
 //mandatory logic require
-const auth = require('./modules/login/login');
+const auth = require('./modules/commands/login/login');
 
 //optional modules below:
-const meme = require('./modules/funpost/daeposting');
+const meme = require('./modules/commands/funpost/daeposting');
 
 //requires urllib package
-const wiki = require('./modules/wiki/search');
+const wiki = require('./modules/commands/wiki/search');
 
 //requires puppeteer package
-const genesis = require('./modules/genesis.xyz/genesis');
+const genesis = require('./modules/commands/genesis.xyz/genesis');
 
 //requires booru package
-const booru = require('./modules/booru/search');
+const booru = require('./modules/commands/booru/search');
 
 //create new client
 const client = new Discord.Client();
