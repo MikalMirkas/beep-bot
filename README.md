@@ -15,7 +15,7 @@ Installs packages and runs the program. It'll crash without a config file.
 
 `npm i`
 
-This project requires a config.js file in the root directory of the application for Discord authentication.
+This project requires a config.js file in the data directory of the application for Discord authentication.
 
 ## Developing
 
