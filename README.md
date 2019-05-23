@@ -16,23 +16,6 @@ Installs packages and runs the program. It'll crash without a config file.
 `npm i`
 
 This project requires a config.js file in the root directory of the application for Discord authentication.
-```
-var config = {	
-    development: {	
-        discord: {	
-            "token": "YOUR_TOKEN_HERE",	
-            "acknowledgeSelf": true	
-        }	
-    },	
-    production: {	
-        discord: {	
-            "token": "YOUR_TOKEN_HERE",	
-            "acknowledgeSelf": false	
-        }	
-    }	
-}	
-module.exports = config; 
-```
 
 ## Developing
 
