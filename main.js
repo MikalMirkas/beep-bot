@@ -24,9 +24,26 @@ const handler = require('./modules/handler');
 //On client ready:
 client.on('ready', () => {
     console.info(`[INFO] Application launch successful in ${env} mode.`);
-    client.user.setActivity("Owner: MikalMirkas#7031", {type: "PLAYING"});
 
-    //setInterval(getOption, 300000);
+    /**
+     * @desc setActivity Carousel
+     */
+    const setNewActivity = () => {
+        if(typeof setNewActivity.counter == 'undefined' || setNewActivity.counter + 1 > activities.length) {
+            setNewActivity.counter = 0;
+        }
+		activities[setNewActivity.counter]();
+        setNewActivity.counter++;
+    }
+
+    const activities = [
+        () => { client.user.setActivity("Owner: MikalMirkas#7031", {type: "PLAYING"}) },
+        () => { client.user.setActivity("Version: 0.1.1", {type: "PLAYING"}) },
+        () => { client.user.setActivity("bigg meme", {type: "PLAYING"}) },
+    ]
+    setNewActivity();
+
+    setInterval(setNewActivity, 300000);
 })
 
 //On any message being recieved:
