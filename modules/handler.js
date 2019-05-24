@@ -37,11 +37,17 @@ const handler = (client, message) => {
     let findSpaceSplit = (config.space_before_command == true ? 1 : 0);
 
     let args = message.content.split(/ +/g);
-    let commandAlias = args[findSpaceSplit].toLowerCase();
-    let command = commandMap.find(command => command.alias.toLowerCase() == commandAlias);
-    if (command) {
-        require(`../${command.path}`).run(client, message, args.slice(findSpaceSplit + 1));
+    if(args.length > findSpaceSplit)
+    {
+        let commandAlias = args[findSpaceSplit].toLowerCase();
+        let command = commandMap.find(command => command.alias.toLowerCase() == commandAlias);
+        if (command) {
+            require(`../${command.path}`).run(client, message, args.slice(findSpaceSplit + 1));
+        }
     }
+    /* else {
+        message.channel.send("Hello World");
+    } */
 };
 
 
