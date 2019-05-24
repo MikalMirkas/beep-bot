@@ -9,10 +9,10 @@
     "dompurify": "^1.0.10",
     "express": "^4.17.0",
     "glob": "^7.1.4",
+    "mwbot": "^1.0.10",
     "puppeteer": "^1.16.0",
     "request": "^2.88.0",
-    "table": "^5.3.3",
-    "urllib": "^2.34.0"
+    "table": "^5.3.3"
   },
   "devDependencies": {
     "eslint": "^5.16.0"
