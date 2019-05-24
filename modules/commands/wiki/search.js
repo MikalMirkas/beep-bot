@@ -8,6 +8,12 @@
 
 const urllib = require('urllib');
 
+const shorthands = {
+    "gbf": "https://gbf.wiki/",
+    "pso2": "https://pso2.arks-visiphone.com/wiki/",
+    "xiv": "https://ffxiv.gamerescape.com/wiki/"
+}
+
 /**
  * @param {*} wikiRootUrl The wiki root URL.
  * @param {*} query The search query that the user inputs.
@@ -46,7 +52,11 @@ exports.run = async (client, message, args) => {
     try {
         //Reformat the arguments:
         let context = (([url, ...others]) => ({"url": url, "query": [...others].join('_')}))(args);
+        if(Object.keys(shorthands).find((element) => element == context.url) != undefined) {
+            context.url = shorthands[Object.keys(shorthands).find((element) => element == context.url)]
+        }
         let result = await search(context.url, context.query);
+        
         message.channel.send(result);
     }
     catch (e) {
@@ -54,7 +64,6 @@ exports.run = async (client, message, args) => {
     }
 };
 
-///beep wiki http://gbf.wiki/ Ultima_Sword
 exports.command = {
     "alias": "wiki",
     "description": "Searches MediaWiki websites."
