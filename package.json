@@ -5,14 +5,21 @@
   "main": "main.js",
   "dependencies": {
     "booru": "^2.0.2",
+    "cheerio": "^1.0.0-rc.3",
     "discord.js": "^11.5.0",
     "dompurify": "^1.0.10",
+    "escape-string-regexp": "^2.0.0",
     "express": "^4.17.0",
     "glob": "^7.1.4",
+    "html-to-text": "^5.1.1",
+    "infobox-parser": "^3.2.0",
+    "md5": "^2.2.1",
     "mwbot": "^1.0.10",
     "puppeteer": "^1.16.0",
     "request": "^2.88.0",
-    "table": "^5.3.3"
+    "string-strip-html": "^4.0.12",
+    "table": "^5.3.3",
+    "wtf_wikipedia": "^7.3.0"
   },
   "devDependencies": {
     "eslint": "^5.16.0"
