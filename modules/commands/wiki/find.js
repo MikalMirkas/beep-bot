@@ -48,7 +48,7 @@ exports.run = (client, message, args) => {
     //Check if shorthanded:
     let customEmbed = false;
 
-    let context = (([url, ...others]) => ({ "url": url.toLowerCase(), "query": [...others].join(' ') }))(args);
+    let context = (([url, ...others]) => ({ "url": url.toLowerCase(), "query": [...others].join('_') }))(args);
     if (Object.keys(shorthands).find((element) => element == context.url) != undefined) {
         let temp = shorthands[Object.keys(shorthands).find((element) => element == context.url)];
         context.url = temp.apiUrl;
