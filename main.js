@@ -8,6 +8,7 @@
 
 //Libraries
 const Discord = require('discord.js');
+require('dotenv').config();
 
 //const DOMPurify = require('dompurify'); Does Discord auto-sanitize?
 
@@ -16,7 +17,7 @@ const client = new Discord.Client();
 
 //Configuration file
 const env = process.env.NODE_ENV || 'development';
-const config = require('./data/config')["general"];
+const config = require('./data/config');
 
 //Load all commands.
 const handler = require('./modules/handler');
@@ -38,7 +39,7 @@ client.on('ready', () => {
 
     const activities = [
         () => { client.user.setActivity("Owner: MikalMirkas#7031", {type: "PLAYING"}) },
-        () => { client.user.setActivity("Version: " + config.version, {type: "PLAYING"}) },
+        () => { client.user.setActivity("Version: " + process.env.VERSION, {type: "PLAYING"}) },
         () => { client.user.setActivity("bigg meme", {type: "PLAYING"}) },
     ]
     setNewActivity();
@@ -87,4 +88,4 @@ client.on('message', msg => {
   });
 
 //Log in:
-require('./modules/auth/login').login(client, require('./data/config')[env].discord.token);
+require('./modules/auth/login').login(client, process.env.DISCORD_TOKEN);

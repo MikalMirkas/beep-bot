@@ -1,7 +1,7 @@
 /**
  * @author Michael Mirkas
  * @date May 19th, 2019
- * @updated May 24th, 2019
+ * @updated May 30th, 2019
  * @desc Powers the rich embedding functionality of MediaWiki applications.
  */
 
@@ -10,13 +10,7 @@ const MWBot = require('mwbot');
 const { RichEmbed } = require('discord.js');
 const md = require('md5');
 const cheerio = require("cheerio");
-
-/* 
-wtf.fetch('Mahira', { wikiUrl: 'https://gbf.wiki/api.php' }).then((doc) => {
-        console.log(
-            doc.json()
-            );
-}); */
+//const hooks = require("./data.js");
 
 
 const shorthands = {

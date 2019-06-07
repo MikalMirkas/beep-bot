@@ -1,32 +1,34 @@
 /**
  * @author Michael Mirkas
  * @date May 23th, 2019
- * @updated May 23rd, 2019
+ * @updated June 7th, 2019
  * @desc Manages the command handling for the bot.
  * @notes Forked from https://github.com/itspedruu/discordjs-bot-example/blob/master/main.js.
  */
 
 const glob = require("glob");
-const config = require('../data/config')["general"];
+const config = require(process.mainModule.paths[0].split('node_modules')[0].slice(0, -1) + '/data/config');
 
 const commandPath = config.command_path;
 
 let files = glob.sync(`${commandPath}**/*.js`);
-let commandMap = files.map((alias => {
+
+let commandMap = files.reduce(function(result, alias) {
     //Return every single export named command.
     var commandData = require(`../${alias}`).command;
 
     try {
         commandData.path = alias;
+        result.push(commandData);
     }
     catch (e) {
         commandData = undefined;
     }
     
-    return commandData;
-}));
+    return result;
+}, []);
 
-console.info(`[INFO] Command folder search successful. Files found: ${commandMap.length}, Commands found: ${commandMap.filter((element) => { return element != null; }).length}`);
+console.info(`[INFO] Command folder search successful. Commands found: ${commandMap.length}.`);
 
 /**
  * 
@@ -40,6 +42,7 @@ const handler = (client, message) => {
     if(args.length > findSpaceSplit)
     {
         let commandAlias = args[findSpaceSplit].toLowerCase();
+        
         let command = commandMap.find(command => command.alias.toLowerCase() == commandAlias);
         if (command) {
             require(`../${command.path}`).run(client, message, args.slice(findSpaceSplit + 1));

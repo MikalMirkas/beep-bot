@@ -8,6 +8,7 @@
     "cheerio": "^1.0.0-rc.3",
     "discord.js": "^11.5.0",
     "dompurify": "^1.0.10",
+    "dotenv": "^8.0.0",
     "escape-string-regexp": "^2.0.0",
     "express": "^4.17.0",
     "glob": "^7.1.4",
@@ -18,13 +19,14 @@
     "puppeteer": "^1.16.0",
     "request": "^2.88.0",
     "string-strip-html": "^4.0.12",
-    "table": "^5.3.3",
-    "wtf_wikipedia": "^7.3.0"
+    "table": "^5.3.3"
   },
   "devDependencies": {
     "eslint": "^5.16.0"
   },
   "scripts": {
+    "start": "node main.js",
+    "debug": "node --nolazy --inspect-brk=9229 main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "MikalMirkas",
