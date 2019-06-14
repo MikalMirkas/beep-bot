@@ -40,7 +40,7 @@ client.on('ready', () => {
     const activities = [
         () => { client.user.setActivity("Owner: MikalMirkas#7031", {type: "PLAYING"}) },
         () => { client.user.setActivity("Version: " + process.env.VERSION, {type: "PLAYING"}) },
-        () => { client.user.setActivity("bigg meme", {type: "PLAYING"}) },
+        () => { client.user.setActivity("Online Since: " + new Date().toUTCString(), {type: "PLAYING"}) },
     ]
     setNewActivity();
 
