@@ -39,9 +39,15 @@ const handler = (client, message) => {
     let findSpaceSplit = (config.space_before_command == true ? 1 : 0);
 
     let args = message.content.split(/ +/g);
-    if(args.length > findSpaceSplit)
+    if(args.length > findSpaceSplit) //if there are args
     {
         let commandAlias = args[findSpaceSplit].toLowerCase();
+
+        if(findSpaceSplit == 0)
+        {
+            //Need to remove the prefix from the command. We should only get here if it starts with the prefix.
+            commandAlias = commandAlias.substring(config.prefix.length);
+        }
         
         let command = commandMap.find(command => command.alias.toLowerCase() == commandAlias);
         if (command) {
