@@ -6,7 +6,6 @@
  */
 
 const MWBot = require('mwbot');
-//const hooks = require("./data.js");
 
 /**
  * 
@@ -196,7 +195,6 @@ const knownSources = {
                             data.skills.active.forEach((element, i) => {
                                 embed.addField(`Skill #${i + 1}: ${element.name}`, element.effect);
                             });
-
                         return embed;
                     }
 
@@ -248,27 +246,16 @@ const knownSources = {
                     const md = require('md5');
                     const cheerio = require("cheerio");
 
-                    function parseCharacter(string)
+                    function parseWeapon(string)
                     {
                         const _ougi = {
                             name: "",
                             effect: "",
-                            condition: "",
                         };
                         
-                        const _active = {
+                        const _skill = {
                             name: "",
-                            cooldown: "",
-                            duration: "",
-                            obtained: "",
                             effect: "",
-                        };
-                        
-                        const _passive = {
-                            name: "",
-                            obtained: "",
-                            effect: "",
-                            condition: "",
                         };
                         
                         //Convert to linebreaks to not get ripped apart after
@@ -279,113 +266,76 @@ const knownSources = {
                         $(".tooltiptext").remove();
                         $(".reference").remove();
 
-                        let character = $(".character__details").eq(0);
-                        let ougi = $(".character__details").eq(1);
-                        let active = $(".character__details").eq(2);
-                        let passive = $(".character__details").eq(3);
-                        let emp = $(".character__details").eq(4);
-                        let uncap = $(".character__details").eq(5);
+                        let weapon = $(".character__details").eq(0);
+                        let ougi = $(".wikitable").eq(5); //always seems to be the 6th table
+                        let skill = $(".weapon-skills").eq(0);
 
-                        function getCharacter() {
+                        function getWeapon() {
                             let stats = {};
-                            let statsTab = character.children().eq(1).children().eq(1).find(".tabbertab").eq(0).find("table").eq(0);
-                            let recruitTab = character.children().eq(1).children().eq(1).find(".tabbertab").eq(0).find("table").eq(1);
-                            let extraData = character.children().eq(1).children().eq(1).find(".tabbertab").eq(1).find("table").eq(0)
+                            let statsTab = weapon.children().eq(1).children().eq(1).find(".tabbertab").eq(0).find("table").eq(0);
+                            let extraData = weapon.children().eq(1).children().eq(1).find(".tabbertab").eq(1).find("table").eq(0)
                             
                             statsTab.find("th").eq(0).remove();
-                            recruitTab.find("th").eq(0).remove();
                             extraData.find("th").eq(0).remove();
                             
                             statsTab.find("th").each(function(i, elem) {
-                                stats[$(this).text().toLowerCase()] = parseStats($(this).next().html());
-                            })
-                            
-                            recruitTab.find("th").each(function(i, elem) {
-                                stats[$(this).text().toLowerCase()] = parseStats($(this).next().html());
+                                stats[$(this).text().trim().toLowerCase()] = parseStats($(this).next().html());
                             })
                         
                             extraData.find("th").each(function(i, elem) {
-                                stats[$(this).text().toLowerCase()] = parseStats($(this).next().html());
+                                stats[$(this).text().trim().toLowerCase()] = parseStats($(this).next().html());
                             })
                             
-                            stats.name = character.find(".char-name").text();
-                            stats.title = character.find(".char-title").text().slice(1, -1);
-                            stats.profile = character.children().eq(2).text().trim();
-                            stats.rarity = character.find(".char-rarity").children()[0].attribs.alt.slice(7, -4);
+                            stats.name = weapon.find(".char-name").text();
+                            stats.title = weapon.find(".char-title").text().slice(1, -1);
+                            stats.profile = weapon.children().eq(2).text().trim();
+                            stats.rarity = weapon.find(".char-rarity").children()[0].attribs.alt.slice(7, -4);
                         
                         
                             return stats;
                         }
 
-                        function getOugis() {
+                        function getOugis() { //no weapons have more than 1 ougi
                             let ougis = [];
-                                for (i = 0; i < ougi.find(".skill-name").length; i++) {
                                 let ougiInstance = Object.create(_ougi);
                                 //Name
-                                let activeTarget = ougi.find(".skill-name").eq(i);
+                                let activeTarget = ougi.find("td").eq(1);
                                 ougiInstance.name = activeTarget.text().trim();
                                 //Effect
                                 activeTarget = activeTarget.next();
                                 ougiInstance.effect = activeTarget.text().trim();
                                 
                                 ougis.push(ougiInstance);
-                            }
                             return ougis;
                         }
 
-                        function getActives() {
-                            let actives = [];
-                            for (i = 0; i < active.find(".skill-name").length; i++) {
-                                let activeInstance = Object.create(_active)
+                        //edit this for TRs
+                        function getSkills() {
+                            let skills = [];
+                            for (i = 0; i < skill.find(".skill-name").length; i++) {
+                                let activeInstance = Object.create(_skill);
                                 
-                                let activeTarget = active.find(".skill-name").eq(i);
+                                let activeTarget = skill.find(".skill-name").eq(i);
                                 //Name
                                 activeInstance.name = activeTarget.text().trim();
-                                //Cooldown
-                                activeTarget = activeTarget.next();
-                                //Duration
-                                activeTarget = activeTarget.next();
-                                //Obtained
-                                activeTarget = activeTarget.next();
                                 //Effect
                                 activeTarget = activeTarget.next();
 
                                 activeInstance.effect = activeTarget.text().trim();
-                                actives.push(activeInstance);
+                                skills.push(activeInstance);
                             }
-                            return actives;
-                        }
-
-                        function getPassives() {
-                            let passives = [];
-                            for (i = 0; i < passive.find(".skill-name").length; i++) {
-                                let passiveInstance = Object.create(_passive);
-
-                                let activeTarget = passive.find(".skill-name").eq(i);
-                                //Name
-                                passiveInstance.name = activeTarget.text().trim()
-                                //Obtained
-                                activeTarget = activeTarget.next();
-                                //Effect
-                                activeTarget = activeTarget.next();
-                                passiveInstance.effect = activeTarget.text().trim();
-                                passives.push(passiveInstance);
-                            }
-                            return passives;
+                            return skills;
                         }
 
                         let data = {
-                            stats: getCharacter(),
+                            stats: getWeapon(),
                             ougis: getOugis(),
-                            skills: {
-                                active: getActives(),
-                                passive: getPassives()
-                            }
+                            skills: getSkills()
                         };
                         return data;
                     }
 
-                    function generateCharacter(response, pageId, client) {
+                    function generateWeapon(response, pageId, client) {
 
                         const elementColors = {
                             fire: "#CC6633",
@@ -397,29 +347,30 @@ const knownSources = {
                             any: "#dfdfdf"
                         }
 
-                        let data = parseCharacter(response.query.pages[pageId]['revisions'][0]['*']);
+                        let data = parseWeapon(response.query.pages[pageId]['revisions'][0]['*']);
                         
                         //figure out the thumbnail url
-                        let img = `Npc_s_${data.stats.id}_01.jpg`;
+                        let img = `Weapon_s_${data.stats.id}.jpg`;
                         let imghash = md(img);
                         let page = response.query.pages[pageId];
                         let imgurl = [response.query.general.base.substring(0, response.query.general.base.lastIndexOf("/")), 'images', imghash.substring(0, 1), imghash.substring(0, 2), img].join('/'); //wikimedia hash algorithm, note that this is fundamentally wrong https://stackoverflow.com/questions/8363531/accessing-main-picture-of-wikipedia-page-by-api#comment17796475_8363589
                         let embed = new RichEmbed()
                             .setAuthor(`${response.query.general.sitename}`, response.query.general.base.substring(0, response.query.general.base.indexOf("//") + 2) + response.query.general.favicon.substring(2), page.fullurl)
                             .setThumbnail(imgurl)
-                            .setTitle(`${data.stats.name}${data.stats.title == null ? "" : ", " + data.stats.title}`)
+                            .setTitle(`${data.stats.name}${data.stats.title == null ? "" : ", One Of the " + data.stats.title}`)
                             .setDescription(`${data.stats.profile}`)
                             .setURL(page.fullurl)
                             .setFooter(`Generated on ${new Date().toUTCString()} via ${response.query.general.sitename}.`, client.user.avatarURL)
-                            .setColor(elementColors[data.stats.element.toLowerCase()] || "#dfdfdf");
+                            /* .setColor(elementColors[data.stats.element.toLowerCase()] || "#dfdfdf"); */
 
                             data.ougis.forEach((element, i) => {
                                 embed.addField(`Charge Attack${i == 0 ? "" : " #" + (i + 1)}: ${element.name}`, element.effect);
                             });
 
-                            data.skills.active.forEach((element, i) => {
-                                embed.addField(`Skill #${i + 1}: ${element.name}`, element.effect);
+                            data.skills.forEach((element, i) => {
+                                embed.addField(`Potential Skill ${i + 1}: ${element.name}`, element.effect);
                             });
+                            console.log(data);
 
                         return embed;
                     }
@@ -460,7 +411,7 @@ const knownSources = {
                         return result;
                     }
 
-                    return generateCharacter(response, pageId, client);
+                    return generateWeapon(response, pageId, client);
                 }
             }
             
@@ -469,15 +420,6 @@ const knownSources = {
     "pso2": {
         "apiUrl": "https://pso2.arks-visiphone.com/api.php",
     },
-/*     "xiv": {
-        "apiUrl": "https://ffxiv.gamerescape.com/w/api.php",
-    },
-    "ffxiv": {
-        "apiUrl": "https://ffxiv.gamerescape.com/w/api.php",
-    },
-    "ff14": {
-        "apiUrl": "https://ffxiv.gamerescape.com/w/api.php",
-    }, */
 }
 
 exports.run = (client, message, args) => {
@@ -517,8 +459,6 @@ exports.run = (client, message, args) => {
             let content = response.query.pages[pageId];
             let genericReply = `${response.query.general.sitename} \:book: | ${response.query.pages[pageId].title}: ${response.query.pages[pageId].fullurl}`; //if no custom embed
 
-            console.log(content['revisions'][0]['*']);
-
             if (context.parse != undefined) {
                 //Iterate through parses
 
@@ -548,7 +488,9 @@ exports.run = (client, message, args) => {
         else {
             message.channel.send("\:book: Page not found.");
         }
-    })
+    }).catch((e) => {
+        message.channel.send(e.message);
+    }) 
 };
 
 exports.command = {
