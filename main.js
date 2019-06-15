@@ -9,7 +9,7 @@
 //Libraries
 const Discord = require('discord.js');
 require('dotenv').config();
-const VERSION = "0.4.3a";
+const VERSION = "0.4.3";
 
 //const DOMPurify = require('dompurify'); Does Discord auto-sanitize?
 
