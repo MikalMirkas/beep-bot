@@ -70,3 +70,4 @@ const handler = (client, message) => {
 } */
 
 exports.handler = handler;
+exports.commands = commandMap;
