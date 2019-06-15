@@ -9,7 +9,7 @@
 //Libraries
 const Discord = require('discord.js');
 require('dotenv').config();
-const VERSION = "0.4.2a";
+const VERSION = "0.4.3a";
 
 //const DOMPurify = require('dompurify'); Does Discord auto-sanitize?
 
@@ -42,6 +42,7 @@ client.on('ready', () => {
         () => { client.user.setActivity("MikalMirkas#7031", {type: "LISTENING"}) },
         () => { client.user.setActivity("v" + VERSION, {type: "PLAYING"}) },
         () => { client.user.setActivity(client.guilds.size + " servers", {type: "WATCHING"}) },
+        () => { client.user.setActivity(config.prefix + (config.space_before_command ? " " : "") + "help", {type: "PLAYING"}) },
         //() => { client.user.setActivity(Math.floor(60000 / client.uptime) + " minutes online", {type: "PLAYING"}) },
     ]
     setNewActivity();

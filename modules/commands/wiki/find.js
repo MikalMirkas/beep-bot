@@ -256,6 +256,7 @@ const knownSources = {
                         const _skill = {
                             name: "",
                             effect: "",
+                            upgrade: "",
                         };
                         
                         //Convert to linebreaks to not get ripped apart after
@@ -312,7 +313,7 @@ const knownSources = {
                         //edit this for TRs
                         function getSkills() {
                             let skills = [];
-                            for (i = 0; i < skill.find(".skill-name").length; i++) {
+                            for (i = 0; i < skill.find(".skill-name,.skill-upgrade-text").length; i++) {
                                 let activeInstance = Object.create(_skill);
                                 
                                 let activeTarget = skill.find(".skill-name").eq(i);
@@ -327,10 +328,44 @@ const knownSources = {
                             return skills;
                         }
 
+                        function getSkillsTest() {
+                            let skills = [];
+                            for (i = 1; i < skill.find("tr").length; i++) {
+                                let activeInstance = Object.create(_skill);
+                                
+                                let activeTarget = skill.find("tr").eq(i);
+
+                                //IF IT IS AN UPGRADE:
+                                if(activeTarget.eq(0).hasClass("skill-upgrade")){
+                                    i++; //If this throws an error, something broke on the wiki.
+                                    activeInstance.upgrade = activeTarget.eq(0).children().eq(1).text().trim();
+                                    activeTarget = activeTarget.next();
+                                }
+
+                                if(activeTarget.eq(0).hasClass("skill-unlock")){
+                                    i++; //If this throws an error, something broke on the wiki.
+                                    activeInstance.upgrade = activeTarget.eq(0).children().eq(1).text().trim();
+                                    activeTarget = activeTarget.next();
+                                }
+
+                                activeTarget = activeTarget.children().next();
+                                //Name
+                                activeInstance.name = activeTarget.eq(0).text().trim();
+                                //Effect
+                                activeTarget = activeTarget.next();
+
+                                activeInstance.effect = activeTarget.text().trim();
+
+                                skills.push(activeInstance);
+                            }
+                            console.log(skills);
+                            return skills;
+                        }
+
                         let data = {
                             stats: getWeapon(),
                             ougis: getOugis(),
-                            skills: getSkills()
+                            skills: getSkillsTest()
                         };
                         return data;
                     }
@@ -368,7 +403,7 @@ const knownSources = {
                             });
 
                             data.skills.forEach((element, i) => {
-                                embed.addField(`Potential Skill ${i + 1}: ${element.name}`, element.effect);
+                                embed.addField(`Weapon Skill ${i + 1}: ${element.name}`, (element.upgrade != "" ? element.upgrade + "\n": "") + element.effect);
                             });
                             console.log(data);
 
