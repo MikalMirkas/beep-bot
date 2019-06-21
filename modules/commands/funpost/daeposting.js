@@ -7,6 +7,7 @@
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args) => {
+    message.channel.startTyping();
     try {
         //Array of shitposts
         const indieGames = [
@@ -46,6 +47,7 @@ exports.run = async (client, message, args) => {
     catch (e) {
         message.channel.send(e);
     }
+    message.channel.stopTyping();
 };
 
 exports.command = {

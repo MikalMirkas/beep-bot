@@ -2,14 +2,14 @@
 /**
  * @author Michael Mirkas
  * @date May 18th, 2019
- * @updated May 23rd, 2019
+ * @updated June 21st, 2019
  * @desc Handles the default behavioural routine for the bot.
  */
 
 //Libraries
 const Discord = require('discord.js');
 require('dotenv').config();
-const VERSION = "0.4.3";
+const VERSION = "0.4.4";
 
 //const DOMPurify = require('dompurify'); Does Discord auto-sanitize?
 
@@ -43,6 +43,7 @@ client.on('ready', () => {
         () => { client.user.setActivity("v" + VERSION, {type: "PLAYING"}) },
         () => { client.user.setActivity(client.guilds.size + " servers", {type: "WATCHING"}) },
         () => { client.user.setActivity(config.prefix + (config.space_before_command ? " " : "") + "help", {type: "PLAYING"}) },
+        () => { client.user.setActivity("Add me: http://bit.ly/beep-bot", {type: "PLAYING"}) },
         //() => { client.user.setActivity(Math.floor(60000 / client.uptime) + " minutes online", {type: "PLAYING"}) },
     ]
     setNewActivity();

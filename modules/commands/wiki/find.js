@@ -1,7 +1,7 @@
 /**
  * @author Michael Mirkas
  * @date May 19th, 2019
- * @updated May 30th, 2019
+ * @updated June 21st, 2019
  * @desc Powers the rich embedding functionality of MediaWiki applications.
  */
 
@@ -458,7 +458,8 @@ const knownSources = {
 }
 
 exports.run = (client, message, args) => {
-    
+    message.channel.startTyping();
+
     //Check if known resource:
     let context = (([url, ...others]) => ({ "url": url.toLowerCase(), "query": [...others].join('_') }))(args);
     
@@ -525,7 +526,8 @@ exports.run = (client, message, args) => {
         }
     }).catch((e) => {
         message.channel.send(e.message);
-    }) 
+    })
+    message.channel.stopTyping();
 };
 
 exports.command = {

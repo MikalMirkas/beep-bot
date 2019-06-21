@@ -2,15 +2,16 @@
 /**
  * @author Michael Mirkas
  * @date May 22nd, 2019
- * @updated May 23rd, 2019
+ * @updated June 21st, 2019
  * @desc Returns an SFW image from a booru.
  */
-
 
 const Booru = require('booru');
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args) => {
+    message.channel.startTyping();
+
     try {
         if (args.length == 0 || !Array.isArray(args)) {
             throw ("This command requires additional parameters.");
@@ -38,6 +39,8 @@ exports.run = async (client, message, args) => {
     catch (e) {
         message.channel.send(e);
     }
+
+    message.channel.stopTyping();
 };
 
 exports.command = {

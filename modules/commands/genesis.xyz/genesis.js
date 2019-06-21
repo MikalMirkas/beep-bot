@@ -10,6 +10,8 @@ const puppeteer = require('puppeteer');
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args) => {
+
+    message.channel.startTyping();
     /**
          * @param {*} url The URL page to scrape.
          * @returns An object containing all the users on the page.
@@ -94,6 +96,8 @@ exports.run = async (client, message, args) => {
     catch (e) {
         message.channel.send(e);
     }
+
+    message.channel.stopTyping();
 };
 
 exports.command = {
