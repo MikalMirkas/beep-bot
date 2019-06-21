@@ -10,40 +10,48 @@ const Booru = require('booru');
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args) => {
+    const arguments = require('yargs-parser')(args, {
+        alias: {
+            query: ['q', 'search', 's']
+        }
+    });
+
     message.channel.startTyping();
 
     try {
-        if (args.length == 0 || !Array.isArray(args)) {
-            throw ("This command requires additional parameters.");
-        }
-        return await Booru.search('safebooru', args.join(' '), { limit: 1, random: true })
+        return await Booru.search('safebooru', arguments.query, { limit: 1, random: true })
             .then(posts => {
                 for (let post of posts)
                     return post;
             })
             .then(function (post) {
-                console.log(post);
                 message.channel.send(
                     new RichEmbed()
                         .setImage(post.fileUrl)
                         .setURL(post.postView)
-                        .setTitle("Mahiraposting")
+                        .setTitle(post.data.id)
                         .setColor(0xE159F5)
                         .setFooter("Generated on " + new Date().toUTCString() + " via booru.js.", client.user.avatarURL)
                 );
             })
             .catch((err) => {
-                message.channel.send(err.message);
+                if (err instanceof Booru.BooruError) {
+                    message.channel.send(err.message);
+                  } else {
+                    //console.error(err);
+                    message.channel.send("No images found.");
+                  }
+            })
+            .then(() => {
+                message.channel.stopTyping();
             });
     }
     catch (e) {
         message.channel.send(e);
     }
-
-    message.channel.stopTyping();
 };
 
 exports.command = {
-    "alias": "imageboard",
+    "alias": "image",
     "description": "Returns an SFW image from a booru."
 }

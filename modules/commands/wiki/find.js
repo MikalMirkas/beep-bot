@@ -358,7 +358,6 @@ const knownSources = {
 
                                 skills.push(activeInstance);
                             }
-                            console.log(skills);
                             return skills;
                         }
 
@@ -405,8 +404,6 @@ const knownSources = {
                             data.skills.forEach((element, i) => {
                                 embed.addField(`Weapon Skill ${i + 1}: ${element.name}`, (element.upgrade != "" ? element.upgrade + "\n": "") + element.effect);
                             });
-                            console.log(data);
-
                         return embed;
                     }
 
@@ -431,7 +428,7 @@ const knownSources = {
 
                         let result = null;
                         if(string != null) {
-                            if(string.lastIndexOf("<img alt=") != -1) {
+                           /*  if(string.lastIndexOf("<img alt=") != -1) {
                                 temp = string.slice(string.lastIndexOf("<img alt=") + 9);
                                 temp = temp.match(/"(.*?)"/)[1];
 
@@ -441,7 +438,7 @@ const knownSources = {
                             }
                             else {
                                 result = strip(string, stripOptions);
-                            }
+                            } */
                         }
                         return result;
                     }
@@ -458,76 +455,89 @@ const knownSources = {
 }
 
 exports.run = (client, message, args) => {
+    const context = require('yargs-parser')(args, {
+        alias: {
+            url: ['apiUrl', 'source', 's', 'u', 'api'],
+            query: ['q']
+        }
+    });
     message.channel.startTyping();
 
-    //Check if known resource:
-    let context = (([url, ...others]) => ({ "url": url.toLowerCase(), "query": [...others].join('_') }))(args);
-    
-    if (Object.keys(knownSources).find((element) => element == context.url) != undefined) {
-        //Create an context object with all relevant information
-        let temp = knownSources[Object.keys(knownSources).find((element) => element == context.url)];
-        context.url = temp.apiUrl;
-        context.parse = temp.parse;
-    }
+    if(context.query != undefined) {
+        //Check if known resource:
+        if (Object.keys(knownSources).find((element) => element == context.url.toLowerCase()) != undefined) {
+            //Create an context object with all relevant information
+            let temp = knownSources[Object.keys(knownSources).find((element) => element == context.url.toLowerCase())];
+            context.url = temp.apiUrl;
+            context.parse = temp.parse;
+        }
 
-    //Prepare request:
-    const wiki = new MWBot({
-        apiUrl: context.url || "https://en.wikipedia.org/w/api.php"
-    });
+        //Prepare request:
+        const wiki = new MWBot({
+            apiUrl: context.url || "https://en.wikipedia.org/w/api.php"
+        });
 
-    wiki.request({
-        action: "query",
-        format: 'json',
-        prop: "info|revisions|imageinfo",
-        inprop: "url",
-        rvprop: "content|parsetree",
-        //rvexpandtemplates: "1",
-        rvparse: "1",
-        rvlimit: "1",
-        titles: context.query,
-        redirects: "1",
-        meta: "siteinfo",
-    }).then((response) => {
-        const pageId = Object.keys(response.query.pages)[0];
-        if (pageId != -1) { //If the pageid isn't -1, the pageId must exist.
+        wiki.request({
+            action: "query",
+            format: 'json',
+            prop: "info|revisions|imageinfo",
+            inprop: "url",
+            rvprop: "content",
+            //rvexpandtemplates: "1",
+            rvparse: "1",
+            rvlimit: "1",
+            titles: context.q.join(' '),
+            redirects: "1",
+            meta: "siteinfo",
+        }).then((response) => {
+            const pageId = Object.keys(response.query.pages)[0];
+            if (pageId != -1) { //If the pageid isn't -1, the pageId must exist.
 
-            //Extract all wikitext from infobox and the rest of the page.
-            let content = response.query.pages[pageId];
-            let genericReply = `${response.query.general.sitename} \:book: | ${response.query.pages[pageId].title}: ${response.query.pages[pageId].fullurl}`; //if no custom embed
+                //Extract all wikitext from infobox and the rest of the page.
+                let content = response.query.pages[pageId];
+                let genericReply = `${response.query.general.sitename} \:book: | ${response.query.pages[pageId].title}: ${response.query.pages[pageId].fullurl}`; //if no custom embed
 
-            if (context.parse != undefined) {
-                //Iterate through parses
+                if (context.parse != undefined) {
+                    //Iterate through parses
 
-                let result;
-                context.parse.forEach((element) => {
-                    if(element["trigger"](content['revisions'][0]['*']))
-                    {
-                        result = element["function"];
-                    }
-                })
-
-                if (typeof result == "function")
-                {
-                    result(response, pageId, client).then((resolve, reject) => {
-                        message.channel.send(resolve);
+                    let result;
+                    context.parse.forEach((element) => {
+                        if(element["trigger"](content['revisions'][0]['*']))
+                        {
+                            result = element["function"];
+                        }
                     })
+
+                    if (typeof result == "function")
+                    {
+                        result(response, pageId, client).then((resolve, reject) => {
+                            message.channel.send(resolve);
+                        })
+                    }
+                    else
+                    {
+                        message.channel.send(genericReply);
+                    }
                 }
-                else
-                {
+                else {
                     message.channel.send(genericReply);
                 }
             }
             else {
-                message.channel.send(genericReply);
+                message.channel.send("\:book: Page or page redirect not found.");
             }
-        }
-        else {
-            message.channel.send("\:book: Page not found.");
-        }
-    }).catch((e) => {
-        message.channel.send(e.message);
-    })
-    message.channel.stopTyping();
+        }).catch((e) => {
+            message.channel.send(e.message);
+        })
+        .then(() => {
+            message.channel.stopTyping();
+        })
+    }
+    else {
+        message.channel.send("Please specify a query.");
+        message.channel.stopTyping();
+    }
+    
 };
 
 exports.command = {

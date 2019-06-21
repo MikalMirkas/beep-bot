@@ -1,7 +1,7 @@
 /**
  * @author Michael Mirkas
  * @date May 18th, 2019
- * @updated May 20th, 2019
+ * @updated June 21st, 2019
  */
 
 const { RichEmbed } = require('discord.js');
@@ -38,7 +38,7 @@ exports.run = async (client, message, args) => {
 
         message.channel.send(
             new RichEmbed()
-            .setTitle("Something Dae Might Say")
+            .setTitle("Something A Certain Someone Might Say")
             .setDescription(getPhrase())
             .setColor(0xE159F5)
             .setFooter("Generated on " + new Date().toUTCString() + ".", client.user.avatarURL)
@@ -52,7 +52,7 @@ exports.run = async (client, message, args) => {
 
 exports.command = {
     "alias": "honk",
-    "description": "Posts something that Dae might say."
+    "description": "Posts something that someone might say."
 }
 
 function getRandomIndex(max) {

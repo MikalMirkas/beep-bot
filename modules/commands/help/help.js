@@ -7,19 +7,24 @@
 const handler = require('../../handler');
 
 exports.run = async (client, message, args) => {
+    const parsedArgs = require('yargs-parser')(args, {
+        alias: {
+            public: ['p']
+        }
+    });
     message.channel.startTyping();
 
     var msg = "```\nHelp:\n\n";
     
     handler.commands.map((ele) => {msg += ele.alias.padEnd(15) + ele.description + "\n"});
-    if(args[0] != "-p")
+    if(parsedArgs.public)
     {
-        message.channel.send("Help sent via DM.");
-        message.author.send(msg + "\n```");
+        message.channel.send(msg + "\n```");
     }
     else
     {
-        message.channel.send(msg + "\n```");
+        message.channel.send("Help sent via DM.");
+        message.author.send(msg + "\n```");
     }
 
     message.channel.stopTyping();

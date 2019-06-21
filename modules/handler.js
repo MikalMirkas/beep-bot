@@ -1,7 +1,7 @@
 /**
  * @author Michael Mirkas
  * @date May 23th, 2019
- * @updated June 7th, 2019
+ * @updated June 21st, 2019
  * @desc Manages the command handling for the bot.
  * @notes Forked from https://github.com/itspedruu/discordjs-bot-example/blob/master/main.js.
  */
@@ -51,7 +51,7 @@ const handler = (client, message) => {
         
         let command = commandMap.find(command => command.alias.toLowerCase() == commandAlias);
         if (command) {
-            require(`../${command.path}`).run(client, message, args.slice(findSpaceSplit + 1));
+            require(`../${command.path}`).run(client, message, args.slice(findSpaceSplit + 1).join(' '));
         }
     }
     /* else {

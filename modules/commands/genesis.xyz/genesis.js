@@ -1,7 +1,7 @@
 /**
  * @author Michael Mirkas
  * @date May 20th, 2019
- * @updated May 20th, 2019
+ * @updated June 21st, 2019
  * @desc Powers scraping Ryuu's website.
  * @notes Puppeteer **does** support SPAs.
  */
@@ -10,7 +10,6 @@ const puppeteer = require('puppeteer');
 const { RichEmbed } = require('discord.js');
 
 exports.run = async (client, message, args) => {
-
     message.channel.startTyping();
     /**
          * @param {*} url The URL page to scrape.
