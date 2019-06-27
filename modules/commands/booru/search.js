@@ -9,12 +9,14 @@
 const Booru = require('booru');
 const { RichEmbed } = require('discord.js');
 
+exports.args = {
+    alias: {
+        query: ['q', 'search', 's']
+    }
+};
+
 exports.run = async (client, message, args) => {
-    const arguments = require('yargs-parser')(args, {
-        alias: {
-            query: ['q', 'search', 's']
-        }
-    });
+    const arguments = require('yargs-parser')(args, exports.args);
 
     message.channel.startTyping();
 

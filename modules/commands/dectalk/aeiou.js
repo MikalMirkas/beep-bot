@@ -3,13 +3,14 @@
  * @date June 27th, 2019
  * @updated June 27th, 2019
  */
+exports.args = {
+    alias: {
+        query: ['q']
+    }
+};
 
 exports.run = async (client, message, args) => {
-    const parsedArgs = require('yargs-parser')(args, {
-        alias: {
-            query: ['q']
-        }
-    });
+    const parsedArgs = require('yargs-parser')(args, exports.args);
 
     if (message.member.voiceChannel) {
         if(parsedArgs.query == null) {

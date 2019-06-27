@@ -6,12 +6,14 @@
 
 const handler = require('../../handler');
 
+exports.args = {
+    alias: {
+        public: ['p']
+    }
+};
+
 exports.run = async (client, message, args) => {
-    const parsedArgs = require('yargs-parser')(args, {
-        alias: {
-            public: ['p']
-        }
-    });
+    const parsedArgs = require('yargs-parser')(args, exports.args);
     message.channel.startTyping();
 
     var msg = "```\nHelp:\n\n";

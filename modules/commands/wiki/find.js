@@ -454,13 +454,15 @@ const knownSources = {
     },
 }
 
+exports.args = {
+    alias: {
+        url: ['apiUrl', 'source', 's', 'u', 'api'],
+        query: ['q']
+    }
+};
+
 exports.run = (client, message, args) => {
-    const context = require('yargs-parser')(args, {
-        alias: {
-            url: ['apiUrl', 'source', 's', 'u', 'api'],
-            query: ['q']
-        }
-    });
+    const context = require('yargs-parser')(args, exports.args);
     message.channel.startTyping();
 
     if(context.query != undefined) {
