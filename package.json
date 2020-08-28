@@ -7,7 +7,7 @@
     "booru": "^2.0.2",
     "cheerio": "^1.0.0-rc.3",
     "discord.js": "^11.5.0",
-    "dompurify": "^1.0.10",
+    "dompurify": "^2.0.3",
     "dotenv": "^8.0.0",
     "escape-string-regexp": "^2.0.0",
     "express": "^4.17.0",
